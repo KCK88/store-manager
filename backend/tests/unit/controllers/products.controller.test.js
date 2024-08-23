@@ -1,8 +1,8 @@
 const chai = require('chai');
 const { expect } = require('chai');
 const sinon = require('sinon');
-const productController = require('../../../src/controllers/products.controller');
-const productService = require('../../../src/services/products.service');
+const { productsController } = require('../../../src/controllers');
+const { productsService } = require('../../../src/services');
 // const salesController = require('../../../src/controllers/sales.controller');
 // const salesService = require('../../../src/services/sales.service');
 
@@ -17,7 +17,7 @@ describe('Testes da Products Controller', function () {
     res.status = sinon.stub().returnsThis();
     res.json = sinon.stub();
 
-    sinon.stub(productService, 'findAllProducts').resolves([
+    sinon.stub(productsService, 'findAllProducts').resolves([
       {
         id: 1,
         name: 'Martelo de Thor',
@@ -27,7 +27,7 @@ describe('Testes da Products Controller', function () {
         name: 'Traje de encolhimento',
       },   
     ]);
-    await productController.findAllProducts(req, res);
+    await productsController.findAllProducts(req, res);
 
     expect(res.status).to.be.calledWith(200); // esperar que seja chamado com o status
     // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
@@ -50,8 +50,8 @@ describe('Testes da Products Controller', function () {
     res.status = sinon.stub().returnsThis();
     res.json = sinon.stub();
 
-    sinon.stub(productService, 'findProductsById').resolves({ id: 1, name: 'Martelo de Thor' });
-    await productController.findProductsById(req, res);
+    sinon.stub(productsService, 'findProductsById').resolves({ id: 1, name: 'Martelo de Thor' });
+    await productsController.findProductsById(req, res);
 
     expect(res.status).to.be.calledWith(200); // esperar que seja chamado com o status
     // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true

@@ -1,5 +1,5 @@
 const express = require('express');
-const { productsController /* salesController */ } = require('./controllers');
+const { productsController, salesController } = require('./controllers');
 
 const app = express();
 
@@ -12,5 +12,8 @@ app.get('/', (_request, response) => {
 
 app.get('/products', productsController.findAllProducts);
 app.get('/products/:id', productsController.findProductsById);
+
+app.get('/sales', salesController.findAllSales);
+app.get('/sales/:id', salesController.findSalessById);
 
 module.exports = app;

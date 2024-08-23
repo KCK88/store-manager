@@ -1,8 +1,6 @@
 const connection = require('./connection');
 
 const findAll = async () => {
-  // Promise
-  // Array
   const [result] = await connection.execute('SELECT * FROM products');
   const products = result;
  
