@@ -57,6 +57,20 @@ describe('Testes da Products Controller', function () {
     // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
     expect(res.json).to.be.calledWith({ id: 1, name: 'Martelo de Thor' });
   });
+
+  it('Service Testa se produto foi criado no DB', async function () {
+    const req = { body: { id: 4, name: 'Disparador de Teia' } };
+    const res = {};
+
+    res.status = sinon.stub().returnsThis();
+    res.json = sinon.stub();
+    sinon.stub(productsService, 'createProduct').resolves({ id: 4, name: 'Disparador de Teia' });
+
+    await productsController.createProduct(req, res);
+
+    expect(res.status).to.be.calledWith(201);
+    expect(res.json).to.be.calledWith({ id: 4, name: 'Disparador de Teia' });
+  });
   // it('Recupera todos as Sales do BD', async function () {
   //   const req = {};
   //   const res = {};

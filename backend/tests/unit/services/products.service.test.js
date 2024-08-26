@@ -42,6 +42,17 @@ describe('Testes da Products Service', function () {
       name: 'Martelo de Thor',
     });
   });
+
+  it('Testa se produto foi criado no DB', async function () {
+    sinon.stub(productsModel, 'createProduct').resolves({ id: 4, name: 'Disparador de Teia' });
+
+    const name = { id: 4, name: 'Disparador de Teia' };
+    const product = await productsService.createProduct(name);
+
+    expect(product).to.be.an('object');
+    expect(product).to.be.deep.equal({ id: 4, name: 'Disparador de Teia' });
+  });
+
   afterEach(function () {
     sinon.restore();
   });
