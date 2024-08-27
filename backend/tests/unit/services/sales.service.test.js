@@ -82,6 +82,21 @@ describe('Testes da Sales Service', function () {
       },
     ]);
   });
+
+  it('Testa processo de criação de venda', async function () {
+    sinon.stub(salesModel, 'createSale').resolves(3);
+    sinon.stub(salesModel, 'registerSale').resolves(3, 1, 1);
+
+    const newSale = await salesService.processSale([
+      {
+        productId: 1,
+        quantity: 1,
+      },
+    ]);
+
+    expect(newSale).to.be.an('object');
+    expect(newSale).to.be.deep.equal({ id: 3, itemsSold: [{ productId: 1, quantity: 1 }] });
+  });
   afterEach(function () {
     sinon.restore();
   });

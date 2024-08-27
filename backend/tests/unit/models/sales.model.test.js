@@ -86,6 +86,51 @@ describe('Testes da Sales Model', function () {
       },
     ]);
   });
+
+  it('Teste de criação de venda', async function () {
+    sinon.stub(connection, 'execute').resolves([{
+      fieldCount: 0,
+      affectedRows: 1,
+      insertId: 3,
+      info: '',
+      serverStatus: 2,
+      warningStatus: 0,
+    }]);
+
+    const sale = await salesModel.createSale();
+
+    expect(sale).to.be.an('Number');
+    expect(sale).to.be.deep.equal(3);
+  });  
+
+  it('Teste de registro de venda', async function () {
+    sinon.stub(connection, 'execute').resolves([
+      {
+        fieldCount: 0,
+        affectedRows: 1,
+        insertId: 0,
+        info: '',
+        serverStatus: 2,
+        warningStatus: 0,
+      },
+      undefined,
+    ]);
+
+    const sale = await salesModel.registerSale(3, 1, 1);
+
+    expect(sale).to.be.an('Array');
+    expect(sale).to.be.deep.equal([
+      {
+        fieldCount: 0,
+        affectedRows: 1,
+        insertId: 0,
+        info: '',
+        serverStatus: 2,
+        warningStatus: 0,
+      },
+      undefined,
+    ]);
+  });
   afterEach(function () {
     sinon.restore();
   });
