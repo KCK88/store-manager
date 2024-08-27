@@ -42,13 +42,12 @@ const findById = async (saleId) => {
 const createSale = async () => {
   const [result] = await connection.execute('INSERT INTO sales (date) VALUES (NOW())');
   const id = result.insertId;
-  console.log(id);  
   return id;
 };
-const registerSale = async (saleId, producId, quantity) => {
+const registerSale = async (saleId, productId, quantity) => {
   const result = await connection.execute(
     'INSERT INTO sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?)',
-    [saleId, producId, quantity],
+    [saleId, productId, quantity],
   ); 
   return result;
 };

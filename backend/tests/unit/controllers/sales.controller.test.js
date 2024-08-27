@@ -2,7 +2,6 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { salesService, productsService } = require('../../../src/services');
 const { salesController } = require('../../../src/controllers');
-const { salesModel } = require('../../../src/models');
 
 const saleDate = '2024-07-24T00:55:57.000Z';
 
@@ -109,7 +108,6 @@ describe('Testes da Sales Controller', function () {
     // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
     expect(res.json).to.be.calledWith({ message: 'Sale not found' });
   });
-  sinon.restore();
   it('Teste de criação de Sale ', async function () {
     const req = { body: [{
       productId: 1,
@@ -119,7 +117,8 @@ describe('Testes da Sales Controller', function () {
     
     res.status = sinon.stub().returnsThis();
     res.json = sinon.stub();
-    sinon.stub(salesModel, 'createSale').resolves(3);
+    sinon.stub(productsService, 'findProductsById').resolves({ id: 1, name: 'produto' });
+    sinon.stub(salesService, 'processSale').resolves({ id: 3, itemsSold: req.body });
     
     await salesController.createSale(req, res);
 
@@ -151,7 +150,7 @@ describe('Testes da Sales Controller', function () {
     expect(res.status).to.be.calledWith(404);
     expect(res.json).to.be.calledWith({ message: 'Product not found' });
   });
-  afterEach(function () {
+  beforeEach(function () {
     sinon.restore();
   });
 });
