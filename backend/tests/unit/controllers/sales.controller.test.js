@@ -97,6 +97,20 @@ describe('Testes da Sales Controller', function () {
       },
     ]);
   });
+  it('Testa se não recupera sale do BD', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+    
+    res.status = sinon.stub().returnsThis();
+    res.json = sinon.stub();
+    
+    sinon.stub(salesService, 'findSalesById').resolves([]);
+    await salesController.findSalessById(req, res);
+    
+    expect(res.status).to.be.calledWith(404); // esperar que seja chamado com o status
+    // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
+    expect(res.json).to.be.calledWith({ message: 'Sale not found' });
+  });
   afterEach(function () {
     sinon.restore();
   });

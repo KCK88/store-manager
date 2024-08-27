@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { productsController } = require('../../../src/controllers');
 const { productsService } = require('../../../src/services');
+const { validateNewProducts } = require('../../../src/middlewares');
 // const salesController = require('../../../src/controllers/sales.controller');
 // const salesService = require('../../../src/services/sales.service');
 
@@ -58,6 +59,20 @@ describe('Testes da Products Controller', function () {
     expect(res.json).to.be.calledWith({ id: 1, name: 'Martelo de Thor' });
   });
 
+  it('Testa se não recupera um produto do BD', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returnsThis();
+    res.json = sinon.stub();
+
+    sinon.stub(productsService, 'findProductsById').resolves(undefined);
+    await productsController.findProductsById(req, res);
+
+    expect(res.status).to.be.calledWith(404); 
+    expect(res.json).to.be.calledWith({ message: 'Product not found' });
+  });
+
   it('Service Testa se produto foi criado no DB', async function () {
     const req = { body: { id: 4, name: 'Disparador de Teia' } };
     const res = {};
@@ -71,13 +86,55 @@ describe('Testes da Products Controller', function () {
     expect(res.status).to.be.calledWith(201);
     expect(res.json).to.be.calledWith({ id: 4, name: 'Disparador de Teia' });
   });
+
+  describe('Testes dos middlewares', function () {
+    it('Teste de sucessoo do middleware de criação de produto', function () {
+      const req = { body: { id: 4, name: 'Disparador de Teia' } };
+      const res = {};
+
+      res.status = sinon.stub().returnsThis();
+      res.json = sinon.stub();
+      const next = sinon.stub().returns();
+
+      validateNewProducts(req, res, next);
+
+      expect(next).to.have.been.calledWith();
+    });
+
+    it('Teste de falha do middleware para nome ausente', function () {
+      const req = { body: { } };
+      const res = {};
+
+      res.status = sinon.stub().returnsThis();
+      res.json = sinon.stub();
+      const next = sinon.stub().returns();
+
+      validateNewProducts(req, res, next);
+
+      expect(res.status).to.be.calledWith(400); 
+      expect(res.json).to.be.calledWith({ message: '"name" is required' });
+    });
+    it('Teste de falha do middleware para tamanho do nome', function () {
+      const req = { body: { id: 4, name: 'Dis' } };
+      const res = {};
+
+      res.status = sinon.stub().returnsThis();
+      res.json = sinon.stub();
+      const next = sinon.stub().returns();
+
+      validateNewProducts(req, res, next);
+
+      expect(res.status).to.be.calledWith(422); 
+      expect(res.json).to.be.calledWith({ message: '"name" length must be at least 5 characters long' });
+    });
+  });
   // it('Recupera todos as Sales do BD', async function () {
   //   const req = {};
   //   const res = {};
-
+    
   //   res.status = sinon.stub().returnsThis();
   //   res.json = sinon.stub();
-
+    
   //   sinon.stub(salesService, 'findAllSales').resolves([
   //     {
   //       saleId: 1,
@@ -99,7 +156,7 @@ describe('Testes da Products Controller', function () {
   //     },
   //   ]);
   //   await salesController.findAllSales(req, res);
-
+            
   //   expect(res.status).to.be.calledWith(200); // esperar que seja chamado com o status
   //   // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
   //   expect(res.json).to.be.calledWith([
@@ -126,10 +183,10 @@ describe('Testes da Products Controller', function () {
   // it('Recupera sale do BD', async function () {
   //   const req = { params: { id: 1 } };
   //   const res = {};
-
+      
   //   res.status = sinon.stub().returnsThis();
   //   res.json = sinon.stub();
-
+      
   //   sinon.stub(salesService, 'findSalesById').resolves([
   //     {
   //       date: saleDate,
@@ -143,7 +200,7 @@ describe('Testes da Products Controller', function () {
   //     },
   //   ]);
   //   await salesController.findSalessById(req, res);
-
+            
   //   expect(res.status).to.be.calledWith(200); // esperar que seja chamado com o status
   //   // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
   //   expect(res.json).to.be.calledWith([
@@ -159,4 +216,7 @@ describe('Testes da Products Controller', function () {
   //     },
   //   ]);
   // });
+  afterEach(function () {
+    sinon.restore();
+  });
 });
