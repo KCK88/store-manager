@@ -109,7 +109,7 @@ describe('Testes da Sales Controller', function () {
     // expect(res.status.calledWith(200)).to.equal(true); // esperar que a chamada do status seja true
     expect(res.json).to.be.calledWith({ message: 'Sale not found' });
   });
-
+  sinon.restore();
   it('Teste de criação de Sale ', async function () {
     const req = { body: [{
       productId: 1,
