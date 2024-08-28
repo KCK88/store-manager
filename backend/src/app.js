@@ -28,6 +28,7 @@ app.put(
   validateHasProduct,
   productsController.updateProduct,
 );
+app.delete('/products/:id', validateHasProduct, productsController.deleteProduct);
 
 app.get('/sales', salesController.findAllSales);
 app.get('/sales/:id', salesController.findSalessById);
