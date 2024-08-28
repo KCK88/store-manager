@@ -1,6 +1,13 @@
 const express = require('express');
 const { productsController, salesController } = require('./controllers');
-const { validateNewProducts, validateHasSale, validateAmountSale } = require('./middlewares');
+const { 
+  validateNewProducts, 
+  validateHasSale, 
+  validateAmountSale, 
+  validateProductHasName, 
+  validateProductNameLength,
+  validateHasProduct, 
+} = require('./middlewares');
 
 const app = express();
 
@@ -14,6 +21,13 @@ app.get('/', (_request, response) => {
 app.get('/products', productsController.findAllProducts);
 app.get('/products/:id', productsController.findProductsById);
 app.post('/products', validateNewProducts, productsController.createProduct);
+app.put(
+  '/products/:id',
+  validateProductHasName,
+  validateProductNameLength,
+  validateHasProduct,
+  productsController.updateProduct,
+);
 
 app.get('/sales', salesController.findAllSales);
 app.get('/sales/:id', salesController.findSalessById);
