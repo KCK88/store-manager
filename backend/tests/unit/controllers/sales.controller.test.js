@@ -2,6 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const { salesService, productsService } = require('../../../src/services');
 const { salesController } = require('../../../src/controllers');
+const { validateHasSale } = require('../../../src/middlewares');
 
 const saleDate = '2024-07-24T00:55:57.000Z';
 
@@ -149,6 +150,56 @@ describe('Testes da Sales Controller', function () {
 
     expect(res.status).to.be.calledWith(404);
     expect(res.json).to.be.calledWith({ message: 'Product not found' });
+  });
+
+  it('Testa validações de vendas', function () {
+    // Defina req.body corretamente
+    const req = { body: [{ productId: 1, quantity: 1 }] };
+    
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    };
+
+    const next = sinon.stub().returns();
+
+    validateHasSale(req, res, next);
+
+    expect(next).to.have.been.calledWith();
+  });
+
+  it('Testa erros de validações de vendas (venda sem produto)', function () {
+    // Defina req.body corretamente
+    const req = { body: [{ quantity: 1 }] };
+    
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    };
+
+    const next = sinon.stub().returns();
+
+    validateHasSale(req, res, next);
+
+    expect(res.status).to.be.calledWith(400); 
+    expect(res.json).to.be.calledWith({ message: '"productId" is required' });
+  });
+
+  it('Testa erros de validações de vendas (venda sem quantidade) ', function () {
+    // Defina req.body corretamente
+    const req = { body: [{ productId: 1 }] };
+    
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    };
+
+    const next = sinon.stub().returns();
+
+    validateHasSale(req, res, next);
+
+    expect(res.status).to.be.calledWith(400); 
+    expect(res.json).to.be.calledWith({ message: '"quantity" is required' });
   });
   beforeEach(function () {
     sinon.restore();
