@@ -1,10 +1,5 @@
-# :construction: README em construção ! :construction:
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto.
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+Neste projeto, eu desenvolvi uma API RESTful utilizando a arquitetura em camadas!
+
+A API construída é um sistema de gerenciamento de vendas, onde foi possível criar, visualizar, deletar e atualizar produtos e vendas. Para a gestão de dados, eu utilizei o banco de dados MySQL.
+
+Além disso, eu desenvolvi testes para garantir as funcionalidades das implementações, uma habilidade essencial para a pessoa desenvolvedora.
